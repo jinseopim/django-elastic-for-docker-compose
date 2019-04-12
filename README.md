@@ -47,7 +47,7 @@ $ docker-compose up
 ### 도커 주요 명령어
 1. 컨테이너 관련 명령어
     1.1. 라이프 사이클
-```
+```console
         - docker run : 컨테이너를 생성한다.
         - docker stop : 컨테이너를 정지시킨다.
         - docker start : 컨테이너를 다시 실행시킨다.
@@ -58,7 +58,8 @@ $ docker-compose up
 ```
 
     1.2. 관련된 정보를 출력해주는 명령어
-```
+
+```console
         - docker ps : 명령어는 실행중인 컨테이너 목록을 보여준다.
         - docker inspect ip : 주소를 포함한 특정 컨테이너에 대한 모든 정보를 보여준다.
         - docker logs : 컨테이너로부터 로그를 가져온다.
