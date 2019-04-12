@@ -46,7 +46,6 @@ $ docker-compose up
 
 ### 도커 주요 명령어
 1. 컨테이너 관련 명령어
-    1.1. 라이프 사이클
 ```console
         - docker run : 컨테이너를 생성한다.
         - docker stop : 컨테이너를 정지시킨다.
@@ -55,11 +54,6 @@ $ docker-compose up
         - docker rm : 컨테이너를 삭제한다.
         - docker kill : 컨테이너에게 SIGKILL을 보낸다. 이에 관련된 이슈가 있다..
         - docker attach : 실행중인 컨테이너에 접속한다. * docker wait 컨테이너가 멈출 때까지 블럭한다.
-```
-
-    1.2. 관련된 정보를 출력해주는 명령어
-
-```console
         - docker ps : 명령어는 실행중인 컨테이너 목록을 보여준다.
         - docker inspect ip : 주소를 포함한 특정 컨테이너에 대한 모든 정보를 보여준다.
         - docker logs : 컨테이너로부터 로그를 가져온다.
@@ -72,7 +66,7 @@ $ docker-compose up
 ```
 
 2. 이미지 관련 명령어
-```
+```console
         - docker images : 모든 이미지 목록을 보여준다.
         - docker import : tarball 파일로부터 이미지를 생성한다.
         - docker build : Dockerfile을 통해 이미지를 생성한다.
@@ -85,7 +79,7 @@ $ docker-compose up
 [출처] [https://gist.github.com/nacyot/8366310](https://gist.github.com/nacyot/8366310)
 
 ### 도커 컴포즈 주요 명령어
-```
+```console
     - 도커 컴포즈 빌드&스타트 : docker-compose up --build (설정파일을 수정한 경우)
     - 도커 컴포즈 스타트 : docker-compose up
     - 모든 볼륨 삭제 : docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker volume rm $(docker volume ls -qf dangling=true)
