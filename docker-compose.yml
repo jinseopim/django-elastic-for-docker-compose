@@ -1,11 +1,15 @@
-version: '3'
+version: '3.6'
 
 volumes:
   django_sample_db_dev: {}
-
+  django_sample_packages: {}
+  esdata1: {}
+  esdata2: {}
+  esdata3: {}
+  
 services:
   db:
-    image: postgres
+    image: postgres:9.6.1
     volumes:
       - django_sample_db_dev:/var/lib/postgresql/data
     environment:
@@ -13,7 +17,14 @@ services:
       - POSTGRES_USER=sampleuser
       - POSTGRES_PASSWORD=samplesecret
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8
-
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -U postgres"
+      interval: 3s
+      timeout: 1s
+      retries: 10
+    ports:
+      - "5432:5432"
+      
   django:
     build:
       context: .
@@ -28,10 +39,129 @@ services:
       - DJANGO_SECRET_KEY=dev_secret_key
     ports:
       - "8000:8000"
-    command:
-      - bash
-      - -c
-      - |
-        /wait-for-it.sh db:5432 -t 10
-        python manage.py migrate
-        python manage.py runserver 0:8000
+    depends_on:
+      - db
+    links:
+      - db
+    command: /start-dev.sh
+    volumes:
+      - ./manage.py:/app/manage.py
+      - ./requirements.txt:/app/requirements.txt
+      - ./requirements-dev.txt:/app/requirements-dev.txt
+      - ./djangosample:/app/djangosample
+      - ./django_sample_packages:/usr/local/lib/python3.6/site-packages/
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+    container_name: elasticsearch
+    environment:
+      - node.name=es01
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    privileged: true
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+      
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+    container_name: elasticsearch2
+    environment:
+      - node.name=es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    privileged: true
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+      
+  elasticsearch3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+    container_name: elasticsearch3
+    environment:
+      - node.name=es03
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    privileged: true
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - esdata3:/usr/share/elasticsearch/data
+      
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.0.0
+    container_name: kibana
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+    ports:
+      - 5601:5601
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+  nginx:
+    image: nginx:latest
+    ports:
+        - 8080:80
+    volumes:
+        - ${PWD}/nginx-config/:/etc/nginx/conf.d/
+    command: /bin/bash -c "nginx -g 'daemon off;'"
+    ulimits:
+      nproc: 65535
