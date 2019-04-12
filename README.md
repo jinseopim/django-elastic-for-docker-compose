@@ -80,8 +80,8 @@ $ docker-compose up
 
 ### 도커 컴포즈 주요 명령어
 ```console
-    - 도커 컴포즈 빌드&스타트 : docker-compose up --build (설정파일을 수정한 경우)
-    - 도커 컴포즈 스타트 : docker-compose up
-    - 모든 볼륨 삭제 : docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker volume rm $(docker volume ls -qf dangling=true)
+- 도커 컴포즈 빌드&스타트 : docker-compose up --build (설정파일을 수정한 경우)
+- 도커 컴포즈 스타트 : docker-compose up
+- 모든 볼륨 삭제 : docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker volume rm $(docker volume ls -qf dangling=true)
 ```
 
