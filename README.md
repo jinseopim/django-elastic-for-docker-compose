@@ -1,10 +1,10 @@
-# 도커 컴포즈 설정을 위한 파이썬/Django 샘플 프로젝트
+# 도커 컴포즈 설정을 위한 파이썬/Django/Elastic(ElasticSearch, Kibana) 샘플 프로젝트
 
 ### 요약
 
 ```
-$ git clone https://github.com/raccoonyy/django-sample-for-docker-compose.git
-$ cd django-sample-for-docker-compose
+$ git clone https://github.com/jinseopim/django-elastic-for-docker-compose.git
+$ cd django-elastic-for-docker-compose
 $ docker-compose up
 ```
 
@@ -18,7 +18,7 @@ $ docker-compose up
 1. 저장소 클론
 
 ```
-$ git clone https://github.com/raccoonyy/django-sample-for-docker-compose.git
+$ git clone https://github.com/jinseopim/django-elastic-for-docker-compose.git
 ```
 
 2. 소스 디렉터리로 이동
